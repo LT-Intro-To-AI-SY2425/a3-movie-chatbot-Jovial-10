@@ -56,14 +56,11 @@ def title_by_year(matches: List[str]) -> List[str]:
     """
 
     year = int(matches[0])
-    print(year)
-
-    result=[]
-
+    result = []
+    # print(year)
     for movie in movie_db:
         # print(get_year(movie))
         # print(get_title(movie))
-
         if get_year(movie) == year:
             result.append(get_title(movie))
             # print("FOUND")
