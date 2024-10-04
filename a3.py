@@ -89,10 +89,10 @@ def title_by_year_range(matches: List[str]) -> List[str]:
 
     for movie in movie_db:
 
-        if start_year <= get_year(movie) <= end_year
+        if start_year <= get_year(movie) <= end_year:
 
         result.append(get_title)
-        
+
     return result
 
     
