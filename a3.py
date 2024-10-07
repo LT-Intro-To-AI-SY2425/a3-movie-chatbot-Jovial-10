@@ -178,7 +178,14 @@ def title_by_director(matches: List[str]) -> List[str]:
     Returns:
         a list of movies titles directed by the passed in director
     """
-    pass
+    
+    director = matches([0])
+   
+    for movie in movie_db: 
+
+        while movie == get_director(movie):
+
+            return get_title(movie)
 
 
 def actors_by_title(matches: List[str]) -> List[str]:
