@@ -158,9 +158,15 @@ def director_by_title(matches: List[str]) -> List[str]:
     """
 
 
+    title = matches([0])
+   
+    for movie in movie_db: 
+
+        while movie == get_title(movie):
+
+            return get_director(movie)
 
 
-    pass
 
 
 def title_by_director(matches: List[str]) -> List[str]:
