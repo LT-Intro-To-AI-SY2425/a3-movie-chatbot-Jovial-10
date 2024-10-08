@@ -91,7 +91,7 @@ def title_by_year_range(matches: List[str]) -> List[str]:
 
         if start_year <= get_year(movie) <= end_year:
 
-            result.append(get_title)
+            result.append(get_title(movie))
 
     return result
 
@@ -114,9 +114,9 @@ def title_before_year(matches: List[str]) -> List[str]:
 
     for movie in movie_db:
 
-        while start_year <= get_year(movie):
+        if start_year > get_year(movie):
 
-            result.append(get_title)
+            result.append(get_title(movie))
 
     return result
 
@@ -138,9 +138,9 @@ def title_after_year(matches: List[str]) -> List[str]:
 
     for movie in movie_db:
 
-        while start_year >= get_year(movie):
+        if start_year < get_year(movie):
 
-            result.append(get_title)
+            result.append(get_title(movie))
 
     return result
 
@@ -157,14 +157,13 @@ def director_by_title(matches: List[str]) -> List[str]:
         a list of 1 string, the director of the movie
     """
 
-
-    title = matches([0])
-   
-    for movie in movie_db: 
-
-        while movie == get_title(movie):
-
-            return get_director(movie)
+    title = matches[0]  # Get the title string from matches
+    
+    for movie in movie_db:
+        if get_title(movie).lower() == title.lower():  # Compare titles ignoring case
+            return [get_director(movie)]  # Return director as a list
+    
+    return []  # Return empty list if no match is found
 
 
 
@@ -179,13 +178,14 @@ def title_by_director(matches: List[str]) -> List[str]:
         a list of movies titles directed by the passed in director
     """
     
-    director = matches([0])
-   
-    for movie in movie_db: 
+    director = matches[0]  # Get the director's name
+    result = []
+    
+    for movie in movie_db:
+        if get_director(movie).lower() == director.lower():  # Compare ignoring case
+            result.append(get_title(movie))  # Add the movie title to result list
 
-        while movie == get_director(movie):
-
-            return get_title(movie)
+    return result
 
 
 def actors_by_title(matches: List[str]) -> List[str]:
@@ -197,7 +197,13 @@ def actors_by_title(matches: List[str]) -> List[str]:
     Returns:
         a list of actors who acted in the passed in title
     """
-    pass
+    title = matches[0]  # Get the movie title
+    
+    for movie in movie_db:
+        if get_title(movie).lower() == title.lower():  # Compare movie titles ignoring case
+            return get_actors(movie)  # Return list of actors
+    
+    return []  # Return empty list if no match is found
 
 
 def year_by_title(matches: List[str]) -> List[int]:
@@ -209,7 +215,13 @@ def year_by_title(matches: List[str]) -> List[int]:
     Returns:
         a list of one item (an int), the year that the movie was made
     """
-    pass
+    title = matches[0]
+
+    for movie in movie_db:
+        if get_title(movie).lower() == title.lower():  # Compare movie titles ignoring case
+            return [get_year(movie)]  # Return the year as a list
+    
+    return []  # Return empty list if no match is found
 
 
 def title_by_actor(matches: List[str]) -> List[str]:
@@ -221,7 +233,14 @@ def title_by_actor(matches: List[str]) -> List[str]:
     Returns:
         a list of movie titles that the actor acted in
     """
-    pass
+    actor = matches[0]  # Get the actor's name
+    result = []
+    
+    for movie in movie_db:
+        if actor.lower() in [a.lower() for a in get_actors(movie)]:  # Check if actor is in movie's actor list
+            result.append(get_title(movie))  # Add the movie title to result list
+    
+    return result
 
 
 # dummy argument is ignored and doesn't matter
@@ -260,7 +279,16 @@ def search_pa_list(src: List[str]) -> List[str]:
         a list of answers. Will be ["I don't understand"] if it finds no matches and
         ["No answers"] if it finds a match but no answers
     """
-    pass
+    for pattern, action in pa_list:
+        # Try matching the source with the pattern
+        matches = match(src, pattern)  # Assume match function returns the matched parts or None
+        if matches:
+            result = action(matches)
+            if result:
+                return result  # If there are results, return them
+            else:
+                return ["No answers"]  # No results found, but pattern matched
+    return ["I don't understand"]  # No pattern matched
 
 
 def query_loop() -> None:
